@@ -16,7 +16,7 @@ function App() {
                 </h2>
                 <ul className="switcher">
                   <li className="switcher__item">
-                    <input id="gender-male" name="gender" value="male" type="radio" checked required />
+                    <input id="gender-male" name="gender" value="male" type="radio" required />
                     <label htmlFor="gender-male">
                       Мужчина
                     </label>
@@ -84,7 +84,7 @@ function App() {
                 <ul className="radios-group">
                   <li className="radio">
                     <div className="radio__wrapper">
-                      <input id="activity-minimal" name="activity" value="min" type="radio" checked required />
+                      <input id="activity-minimal" name="activity" value="min" type="radio" required />
                       <label htmlFor="activity-minimal">
                         Минимальная
                       </label>
