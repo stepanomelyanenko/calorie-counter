@@ -1,46 +1,15 @@
 import './css/style.css';
 import './css/normalize.css'
 
-import { useState } from 'react';
-import {calculateResult} from "./js/const";
+import {useState} from 'react';
+import {calculateResult, Gender, InitialParams} from "./js/const";
 
 function App() {
-  const genderInputElements = document.getElementsByName('gender');
-
-  const ageInputElement = document.getElementById('age');
-  const heightInputElement = document.getElementById('height');
-  const weightInputElement = document.getElementById('weight');
-
-  const activityInputElements = document.getElementsByName('activity');
-
-  const countBtn = document.querySelector('.form__submit-button');
-  const resetBtn = document.querySelector('.form__reset-button');
-
-  const CheckCalculationAvailable = () => {
-    if (gender && age && height && weight && activity) {
-      setIsCalculationAvailable(true);
-    } else {
-      setIsCalculationAvailable(false);
-    }
-  };
-
-  const CheckResetAvailable = () => {
-    if (gender || age || height || weight || activity) {
-      setIsResetAvailable(true);
-    } else {
-      setIsResetAvailable(false);
-    }
-  };
-
   const [isCalculationAvailable, setIsCalculationAvailable] = useState(false);
   const [isResetAvailable, setIsResetAvailable] = useState(false);
   const [isResultAvailable, setIsResultAvailable] = useState(false);
 
-  const [gender, setGender] = useState(null);
-  const [age, setAge] = useState(null);
-  const [height, setHeight] = useState(null);
-  const [weight, setWeight] = useState(null);
-  const [activity, setActivity] = useState(null);
+  const [params, setParams] = useState(InitialParams);
 
   const [result, setResult] = useState({
     maintenance: 0,
@@ -48,40 +17,78 @@ function App() {
     gain: 0
   });
 
+  const checkCalculationAvailable = () => {
+    if (params.age > 0 && params.height > 0 && params.weight > 0) {
+      setIsCalculationAvailable(true);
+    } else {
+      setIsCalculationAvailable(false);
+    }
+  };
+
+  const checkResetAvailable = () => {
+    if (params.gender || params.age || params.height || params.weight || params.activity) {
+      setIsResetAvailable(true);
+    } else {
+      setIsResetAvailable(false);
+    }
+  };
+
   const genderChangeHandle = (evt) => {
-    setGender(evt.target.value);
-    CheckResetAvailable();
-    CheckCalculationAvailable();
+    setParams({
+      ...params,
+      gender: evt.target.value,
+    });
+    checkResetAvailable();
+    checkCalculationAvailable();
   };
 
   const ageChangeHandle = (evt) => {
-      setAge(evt.target.value);
-      CheckResetAvailable();
-      CheckCalculationAvailable();
-    };
+    setParams({
+      ...params,
+      age: evt.target.value,
+    });
+    checkResetAvailable();
+    checkCalculationAvailable();
+  };
 
   const heightChangeHandle = (evt) => {
-    setHeight(evt.target.value);
-    CheckResetAvailable();
-    CheckCalculationAvailable();
+    setParams({
+      ...params,
+      height: evt.target.value,
+    });
+    checkResetAvailable();
+    checkCalculationAvailable();
   }
 
   const weightChangeHandle = (evt) => {
-    setWeight(evt.target.value);
-    CheckResetAvailable();
-    CheckCalculationAvailable();
+    setParams({
+      ...params,
+      weight: evt.target.value,
+    });
+    checkResetAvailable();
+    checkCalculationAvailable();
   };
 
   const activityChangeHandle = (evt) => {
-    setActivity(evt.target.value);
-    CheckResetAvailable();
-    CheckCalculationAvailable();
+    setParams({
+      ...params,
+      activity: evt.target.value,
+    });
+    checkResetAvailable();
+    checkCalculationAvailable();
   }
 
-  const onSubmitHandle = (evt) => {
+  const onCalculateClickHandle = (evt) => {
     evt.preventDefault();
-    setResult(calculateResult(gender, weight, height, age, activity));
+    setResult(calculateResult(params));
     setIsResultAvailable(true);
+  }
+
+  const onResetClickHandle = (evt) => {
+    evt.preventDefault();
+    setParams(InitialParams);
+    setIsResetAvailable(false);
+    setIsResultAvailable(false);
   }
 
   return (
@@ -98,13 +105,29 @@ function App() {
                 </h2>
                 <ul className="switcher">
                   <li className="switcher__item">
-                    <input id="gender-male" name="gender" value="male" type="radio" onClick={genderChangeHandle} required />
+                    <input
+                        id="gender-male"
+                        name="gender"
+                        value="male"
+                        type="radio"
+                        onClick={genderChangeHandle}
+                        checked={params.gender === Gender.MALE}
+                        required
+                    />
                     <label htmlFor="gender-male">
                       Мужчина
                     </label>
                   </li>
                   <li className="switcher__item">
-                    <input id="gender-female" name="gender" value="female" type="radio" onClick={genderChangeHandle} required />
+                    <input
+                        id="gender-female"
+                        name="gender"
+                        value="female"
+                        type="radio"
+                        onClick={genderChangeHandle}
+                        checked={params.gender === Gender.FEMALE}
+                        required
+                    />
                     <label htmlFor="gender-female">
                       Женщина
                     </label>
@@ -126,8 +149,17 @@ function App() {
                   </span>
                     </div>
                     <div className="input__wrapper">
-                      <input type="text" id="age" name="age" placeholder="0" inputMode="decimal" maxLength="3"
-                             required onChange={ageChangeHandle} />
+                      <input
+                          type="text"
+                          id="age"
+                          name="age"
+                          placeholder="0"
+                          inputMode="decimal"
+                          maxLength="3"
+                          value={params.age}
+                          onChange={ageChangeHandle}
+                          required
+                      />
                     </div>
                   </div>
                   <div className="input">
@@ -140,8 +172,17 @@ function App() {
                   </span>
                     </div>
                     <div className="input__wrapper">
-                      <input type="text" id="height" name="height" placeholder="0" inputMode="decimal" maxLength="3"
-                             required onChange={heightChangeHandle} />
+                      <input
+                          type="text"
+                          id="height"
+                          name="height"
+                          placeholder="0"
+                          inputMode="decimal"
+                          maxLength="3"
+                          value={params.height}
+                          onChange={heightChangeHandle}
+                          required
+                      />
                     </div>
                   </div>
                   <div className="input">
@@ -154,8 +195,17 @@ function App() {
                   </span>
                     </div>
                     <div className="input__wrapper">
-                      <input type="text" id="weight" name="weight" placeholder="0" inputMode="decimal" maxLength="3"
-                             required onChange={weightChangeHandle} />
+                      <input
+                          type="text"
+                          id="weight"
+                          name="weight"
+                          placeholder="0"
+                          inputMode="decimal"
+                          maxLength="3"
+                          value={params.weight}
+                          onChange={weightChangeHandle}
+                          required
+                      />
                     </div>
                   </div>
                 </div>
@@ -167,7 +217,15 @@ function App() {
                 <ul className="radios-group">
                   <li className="radio">
                     <div className="radio__wrapper">
-                      <input id="activity-minimal" name="activity" value="min" type="radio" required onChange={activityChangeHandle}/>
+                      <input
+                          id="activity-minimal"
+                          name="activity"
+                          value="min"
+                          type="radio"
+                          checked={params.activity === 'min'}
+                          onChange={activityChangeHandle}
+                          required
+                      />
                       <label htmlFor="activity-minimal">
                         Минимальная
                       </label>
@@ -178,7 +236,15 @@ function App() {
                   </li>
                   <li className="radio">
                     <div className="radio__wrapper">
-                      <input id="activity-low" name="activity" value="low" type="radio" required onChange={activityChangeHandle}/>
+                      <input
+                          id="activity-low"
+                          name="activity"
+                          value="low"
+                          type="radio"
+                          checked={params.activity === 'low'}
+                          onChange={activityChangeHandle}
+                          required
+                      />
                       <label htmlFor="activity-low">
                         Низкая
                       </label>
@@ -189,7 +255,15 @@ function App() {
                   </li>
                   <li className="radio">
                     <div className="radio__wrapper">
-                      <input id="activity-medium" name="activity" value="medium" type="radio" required onChange={activityChangeHandle}/>
+                      <input
+                          id="activity-medium"
+                          name="activity"
+                          value="medium"
+                          type="radio"
+                          checked={params.activity === 'medium'}
+                          onChange={activityChangeHandle}
+                          required
+                      />
                       <label htmlFor="activity-medium">
                         Средняя
                       </label>
@@ -200,7 +274,15 @@ function App() {
                   </li>
                   <li className="radio">
                     <div className="radio__wrapper">
-                      <input id="activity-high" name="activity" value="high" type="radio" required onChange={activityChangeHandle}/>
+                      <input
+                          id="activity-high"
+                          name="activity"
+                          value="high"
+                          type="radio"
+                          checked={params.activity === 'high'}
+                          onChange={activityChangeHandle}
+                          required
+                      />
                       <label htmlFor="activity-high">
                         Высокая
                       </label>
@@ -211,7 +293,15 @@ function App() {
                   </li>
                   <li className="radio">
                     <div className="radio__wrapper">
-                      <input id="activity-maximal" name="activity" value="max" type="radio" required onChange={activityChangeHandle}/>
+                      <input
+                          id="activity-maximal"
+                          name="activity"
+                          value="max"
+                          type="radio"
+                          checked={params.activity === 'max'}
+                          onChange={activityChangeHandle}
+                          required
+                      />
                       <label htmlFor="activity-maximal">
                         Очень высокая
                       </label>
@@ -227,11 +317,18 @@ function App() {
                     className="form__submit-button button"
                     name="submit"
                     type="button"
-                    onClick={onSubmitHandle}
-                    disabled={!isCalculationAvailable}>
+                    onClick={onCalculateClickHandle}
+                    disabled={!isCalculationAvailable}
+                >
                   Рассчитать
                 </button>
-                <button className="form__reset-button" name="reset" type="reset" disabled={!isResetAvailable}>
+                <button
+                    className="form__reset-button"
+                    name="reset"
+                    type="reset"
+                    onClick={onResetClickHandle}
+                    disabled={!isResetAvailable}
+                >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="#FD3636" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" clipRule="evenodd"
                           d="M13.4143 12.0002L18.7072 6.70725C19.0982 6.31625 19.0982 5.68425 18.7072 5.29325C18.3162 4.90225 17.6842 4.90225 17.2933 5.29325L12.0002 10.5862L6.70725 5.29325C6.31625 4.90225 5.68425 4.90225 5.29325 5.29325C4.90225 5.68425 4.90225 6.31625 5.29325 6.70725L10.5862 12.0002L5.29325 17.2933C4.90225 17.6842 4.90225 18.3162 5.29325 18.7072C5.48825 18.9022 5.74425 19.0002 6.00025 19.0002C6.25625 19.0002 6.51225 18.9022 6.70725 18.7072L12.0002 13.4143L17.2933 18.7072C17.4882 18.9022 17.7443 19.0002 18.0002 19.0002C18.2562 19.0002 18.5122 18.9022 18.7072 18.7072C19.0982 18.3162 19.0982 17.6842 18.7072 17.2933L13.4143 12.0002Z"/>
@@ -280,3 +377,4 @@ function App() {
 }
 
 export default App;
+

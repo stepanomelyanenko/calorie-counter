@@ -16,7 +16,7 @@ const ActivityCoefficient = {
     max: 1.9,
 }
 
-const initialParams = {
+const InitialParams = {
     gender: Gender.MALE,
     weight: 0,
     height: 0,
@@ -24,7 +24,7 @@ const initialParams = {
     activity: 'min',
 }
 
-const calculateResult = (gender, weight, height, age, activity) => {
+const calculateResult = ({gender, weight, height, age, activity}) => {
     const weightKeepingResult= gender === 'male'
         ? (10 * weight) + (6.25 * height) - (5 * age) + 5
         : (10 * weight) + (6.25 * height) - (5 * age) - 161;
@@ -38,4 +38,5 @@ const calculateResult = (gender, weight, height, age, activity) => {
     }
 }
 
-export {initialParams, calculateResult};
+export {Gender, InitialParams, calculateResult};
+
