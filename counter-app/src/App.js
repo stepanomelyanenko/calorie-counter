@@ -2,6 +2,8 @@ import './css/style.css';
 import './css/normalize.css'
 
 import { useState } from 'react';
+import {calculateResult} from "./js/const";
+
 
 function App() {
   const genderInputElements = document.getElementsByName('gender');
@@ -25,9 +27,9 @@ function App() {
 
   const CheckResetAvailable = () => {
     if (gender || age || height || weight || activity) {
-      setIsResultAvailable(true);
+      setIsResetAvailable(true);
     } else {
-      setIsResultAvailable(false);
+      setIsResetAvailable(false);
     }
   };
 
@@ -35,11 +37,17 @@ function App() {
   const [isResetAvailable, setIsResetAvailable] = useState(false);
   const [isResultAvailable, setIsResultAvailable] = useState(false);
 
-  const [gender, setGender] = useState('male');
+  const [gender, setGender] = useState(null);
   const [age, setAge] = useState(null);
   const [height, setHeight] = useState(null);
   const [weight, setWeight] = useState(null);
-  const [activity, setActivity] = useState('min');
+  const [activity, setActivity] = useState(null);
+
+  const [result, setResult] = useState({
+    maintenance: 0,
+    loss: 0,
+    gain: 0
+  });
 
   const genderChangeHandle = (evt) => {
     setGender(evt.target.value);
@@ -69,6 +77,12 @@ function App() {
     setActivity(evt.target.value);
     CheckResetAvailable();
     CheckCalculationAvailable();
+  }
+
+  const onSubmitHandle = (evt) => {
+    evt.preventDefault();
+    setResult(calculateResult(gender, weight, height, age, activity));
+    setIsResultAvailable(true);
   }
 
   return (
@@ -210,7 +224,12 @@ function App() {
                 </ul>
               </fieldset>
               <div className="form__submit">
-                <button className="form__submit-button button" name="submit" type="submit" disabled>
+                <button
+                    className="form__submit-button button"
+                    name="submit"
+                    type="button"
+                    onClick={onSubmitHandle}
+                    disabled={!isCalculationAvailable}>
                   Рассчитать
                 </button>
                 <button className="form__reset-button" name="reset" type="reset" disabled={!isResetAvailable}>
@@ -224,14 +243,14 @@ function App() {
                 </button>
               </div>
             </form>
-            <section className="counter__result counter__result--hidden">
+            <section className={isResultAvailable ? "counter__result": "counter__result counter__result--hidden"}>
               <h2 className="heading">
                 Ваша норма калорий
               </h2>
               <ul className="counter__result-list">
                 <li className="counter__result-item">
                   <h3>
-                    <span id="calories-norm">3 800</span> ккал
+                    <span id="calories-norm">{result.maintenance}</span> ккал
                   </h3>
                   <p>
                     поддержание веса
@@ -239,7 +258,7 @@ function App() {
                 </li>
                 <li className="counter__result-item">
                   <h3>
-                    <span id="calories-minimal">3 300</span> ккал
+                    <span id="calories-minimal">{result.loss}</span> ккал
                   </h3>
                   <p>
                     снижение веса
@@ -247,7 +266,7 @@ function App() {
                 </li>
                 <li className="counter__result-item">
                   <h3>
-                    <span id="calories-maximal">4 000</span> ккал
+                    <span id="calories-maximal">{result.gain}</span> ккал
                   </h3>
                   <p>
                     набор веса

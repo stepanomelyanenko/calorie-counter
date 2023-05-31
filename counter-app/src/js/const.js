@@ -7,13 +7,23 @@ const ActivityCoefficient = {
 }
 
 const WeightChangeCoefficient = {
-    lose: 0.85,
+    loss: 0.85,
     gain: 1.15,
 }
 
-const calculateWomanWeight = (weight, height, age) => (10 * weight) + (6.25 * height) - (5 * age) - 161;
+const calculateResult = (gender, weight, height, age, activity) => {
+    const weightKeepingResult= gender === 'male'
+        ? (10 * weight) + (6.25 * height) - (5 * age) + 5
+        : (10 * weight) + (6.25 * height) - (5 * age) - 161;
 
-const calculateManWeight = (weight, height, age) => (10 * weight) + (6.25 * height) - (5 * age) + 5;
+    const calorieAllowance = weightKeepingResult * ActivityCoefficient[activity];
 
-export {ActivityCoefficient, WeightChangeCoefficient, calculateWomanWeight, calculateManWeight};
+    return {
+        maintenance: Math.round(calorieAllowance),
+        loss: Math.round(calorieAllowance * WeightChangeCoefficient.loss),
+        gain: Math.round(calorieAllowance * WeightChangeCoefficient.gain),
+    }
+}
+
+export {calculateResult};
 
