@@ -1,3 +1,13 @@
+const Gender = {
+    MALE: 'male',
+    FEMALE: 'female'
+}
+
+const WeightChangeCoefficient = {
+    LOSS: 0.85,
+    GAIN: 1.15,
+}
+
 const ActivityCoefficient = {
     min: 1.2,
     low: 1.375,
@@ -6,9 +16,12 @@ const ActivityCoefficient = {
     max: 1.9,
 }
 
-const WeightChangeCoefficient = {
-    loss: 0.85,
-    gain: 1.15,
+const initialParams = {
+    gender: Gender.MALE,
+    weight: 0,
+    height: 0,
+    age: 0,
+    activity: 'min',
 }
 
 const calculateResult = (gender, weight, height, age, activity) => {
@@ -20,10 +33,9 @@ const calculateResult = (gender, weight, height, age, activity) => {
 
     return {
         maintenance: Math.round(calorieAllowance),
-        loss: Math.round(calorieAllowance * WeightChangeCoefficient.loss),
-        gain: Math.round(calorieAllowance * WeightChangeCoefficient.gain),
+        loss: Math.round(calorieAllowance * WeightChangeCoefficient.LOSS),
+        gain: Math.round(calorieAllowance * WeightChangeCoefficient.GAIN),
     }
 }
 
-export {calculateResult};
-
+export {initialParams, calculateResult};

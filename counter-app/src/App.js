@@ -4,7 +4,6 @@ import './css/normalize.css'
 import { useState } from 'react';
 import {calculateResult} from "./js/const";
 
-
 function App() {
   const genderInputElements = document.getElementsByName('gender');
 
