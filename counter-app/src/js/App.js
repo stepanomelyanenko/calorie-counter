@@ -1,8 +1,8 @@
-import './css/style.css';
-import './css/normalize.css'
+import '../css/style.css';
+import '../css/normalize.css'
 
 import {useState} from 'react';
-import {calculateResult, Gender, InitialParams} from "./js/const";
+import {calculateResult, Gender, InitialParams} from "./const";
 
 function App() {
   const [isCalculationAvailable, setIsCalculationAvailable] = useState(false);
@@ -25,20 +25,12 @@ function App() {
     }
   };
 
-  const checkResetAvailable = () => {
-    if (params.gender || params.age || params.height || params.weight || params.activity) {
-      setIsResetAvailable(true);
-    } else {
-      setIsResetAvailable(false);
-    }
-  };
-
   const genderChangeHandle = (evt) => {
     setParams({
       ...params,
       gender: evt.target.value,
     });
-    checkResetAvailable();
+    setIsResetAvailable(true);
     checkCalculationAvailable();
   };
 
@@ -47,7 +39,7 @@ function App() {
       ...params,
       age: evt.target.value,
     });
-    checkResetAvailable();
+    setIsResetAvailable(true);
     checkCalculationAvailable();
   };
 
@@ -56,7 +48,7 @@ function App() {
       ...params,
       height: evt.target.value,
     });
-    checkResetAvailable();
+    setIsResetAvailable(true);
     checkCalculationAvailable();
   }
 
@@ -65,7 +57,7 @@ function App() {
       ...params,
       weight: evt.target.value,
     });
-    checkResetAvailable();
+    setIsResetAvailable(true);
     checkCalculationAvailable();
   };
 
@@ -74,7 +66,7 @@ function App() {
       ...params,
       activity: evt.target.value,
     });
-    checkResetAvailable();
+    setIsResetAvailable(true);
     checkCalculationAvailable();
   }
 
